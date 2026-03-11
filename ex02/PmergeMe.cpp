@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:42 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/03/11 16:35:09 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:31:09 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,33 +71,23 @@ bool PmergeMe::isValidNumber(const std::string& str) const
 
 void PmergeMe::sort()
 {
-	std::cout << "Before: ";
-	for (size_t i = 0; i < _vector.size() && i < 5; ++i)
-		std::cout << _vector[i] << " ";
-	if (_vector.size() > 5)
-		std::cout << "[...]";
-	std::cout << std::endl;
+	display("Before: ", _vector);
 	
 	// Sort with vector
-	clock_t start = clock();
+	std::clock_t start = std::clock();
 	std::vector<int> vecCopy = _vector;
 	fordJohnsonVector(vecCopy);
-	clock_t end = clock();
+	std::clock_t end = std::clock();
 	double vectorTime = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
 	
 	// Sort with deque
-	start = clock();
+	start = std::clock();
 	std::deque<int> deqCopy = _deque;
 	fordJohnsonDeque(deqCopy);
-	end = clock();
+	end = std::clock();
 	double dequeTime = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
 	
-	std::cout << "After:  ";
-	for (size_t i = 0; i < vecCopy.size() && i < 5; ++i)
-		std::cout << vecCopy[i] << " ";
-	if (vecCopy.size() > 5)
-		std::cout << "[...]";
-	std::cout << std::endl;
+	display("After:  ", vecCopy);
 	
 	std::cout << std::fixed << std::setprecision(5);
 	std::cout << "Time to process a range of " << _vector.size() 
@@ -106,9 +96,16 @@ void PmergeMe::sort()
 	          << " elements with std::deque  : " << dequeTime << " us" << std::endl;
 }
 
-void PmergeMe::display() const
+void PmergeMe::display(const std::string& prefix, const std::vector<int>& vec) const
 {
-	// Already displayed in sort()
+	std::cout << prefix;
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		std::cout << vec[i];
+		if (i < vec.size() - 1)
+			std::cout << " ";
+	}
+	std::cout << std::endl;
 }
 
 // Ford-Johnson merge-insert sort for vector

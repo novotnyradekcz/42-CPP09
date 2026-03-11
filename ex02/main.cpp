@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:28:19 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/03/11 16:35:08 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:15:35 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int main(int argc, char** argv)
 	{
 		PmergeMe sorter(argc, argv);
 		sorter.sort();
-		sorter.display();
 	}
 	catch (const std::exception& e)
 	{
