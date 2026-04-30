@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:27 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/03/11 20:15:35 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/04/30 17:30:24 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ private:
 	void parseInput(int argc, char** argv);
 	bool isValidNumber(const std::string& str) const;
 	
+	std::vector<size_t> jacobsthalSequence(size_t n) const;
+
 	// Ford-Johnson algorithm for vector
 	void fordJohnsonVector(std::vector<int>& vec);
-	void insertionSortVector(std::vector<int>& vec, size_t left, size_t right);
-	void mergeVector(std::vector<int>& vec, size_t left, size_t mid, size_t right);
-	
+	void binaryInsertVector(std::vector<int>& chain, int val, size_t end);
+
 	// Ford-Johnson algorithm for deque
 	void fordJohnsonDeque(std::deque<int>& deq);
-	void insertionSortDeque(std::deque<int>& deq, size_t left, size_t right);
-	void mergeDeque(std::deque<int>& deq, size_t left, size_t mid, size_t right);
+	void binaryInsertDeque(std::deque<int>& chain, int val, size_t end);
 };
 
 #endif
