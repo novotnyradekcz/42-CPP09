@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:28:19 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/03/11 16:35:08 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/05 20:23:31 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 {
 	if (argc != 2)
 	{
-		std::cerr << "Error" << std::endl;
+		std::cerr << "Error: Invalid number of arguments. Usage: ./RPN <expression>" << std::endl;
 		return 1;
 	}
 	
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "Error" << std::endl;
+		std::cerr << "Error: " << e.what() << std::endl;
 		return 1;
 	}
 	
