@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:42 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/04/30 17:30:17 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/05 22:05:16 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,24 @@
 #include <ctime>
 #include <iomanip>
 
-PmergeMe::PmergeMe() {}
+PmergeMe::PmergeMe()
+{
+	// _vecComparisons = 0;
+	// _deqComparisons = 0;
+}
 
 PmergeMe::PmergeMe(int argc, char** argv)
 {
+	// _vecComparisons = 0;
+	// _deqComparisons = 0;
 	parseInput(argc, argv);
 }
 
-PmergeMe::PmergeMe(const PmergeMe& other) : _vector(other._vector), _deque(other._deque) {}
+PmergeMe::PmergeMe(const PmergeMe& other) : _vector(other._vector), _deque(other._deque)
+{
+	// _vecComparisons = other._vecComparisons;
+	// _deqComparisons = other._deqComparisons;
+}
 
 PmergeMe& PmergeMe::operator=(const PmergeMe& other)
 {
@@ -34,6 +44,8 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& other)
 	{
 		_vector = other._vector;
 		_deque = other._deque;
+		// _vecComparisons = other._vecComparisons;
+		// _deqComparisons = other._deqComparisons;
 	}
 	return *this;
 }
@@ -75,6 +87,7 @@ void PmergeMe::sort()
 {
 	display("Before: ", _vector);
 	
+	// _vecComparisons = 0;
 	// Sort with vector
 	std::clock_t start = std::clock();
 	std::vector<int> vecCopy = _vector;
@@ -82,6 +95,7 @@ void PmergeMe::sort()
 	std::clock_t end = std::clock();
 	double vectorTime = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000;
 	
+	// _deqComparisons = 0;
 	// Sort with deque
 	start = std::clock();
 	std::deque<int> deqCopy = _deque;
@@ -96,6 +110,8 @@ void PmergeMe::sort()
 	          << " elements with std::vector : " << vectorTime << " us" << std::endl;
 	std::cout << "Time to process a range of " << _deque.size() 
 	          << " elements with std::deque  : " << dequeTime << " us" << std::endl;
+	// std::cout << "Comparisons (vector): " << _vecComparisons << std::endl;
+	// std::cout << "Comparisons (deque):  " << _deqComparisons << std::endl;
 }
 
 void PmergeMe::display(const std::string& prefix, const std::vector<int>& vec) const
@@ -134,6 +150,7 @@ void PmergeMe::binaryInsertVector(std::vector<int>& chain, int val, size_t end)
 	while (lo < hi)
 	{
 		size_t mid = lo + (hi - lo) / 2;
+		// ++_vecComparisons;
 		if (chain[mid] < val)
 			lo = mid + 1;
 		else
@@ -157,6 +174,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 	for (size_t i = 0; i < numPairs; ++i)
 	{
 		int a = vec[2 * i], b = vec[2 * i + 1];
+		// ++_vecComparisons;
 		if (a > b) std::swap(a, b);
 		pairs.push_back(std::make_pair(a, b));
 	}
@@ -241,6 +259,7 @@ void PmergeMe::binaryInsertDeque(std::deque<int>& chain, int val, size_t end)
 	while (lo < hi)
 	{
 		size_t mid = lo + (hi - lo) / 2;
+		// ++_deqComparisons;
 		if (chain[mid] < val)
 			lo = mid + 1;
 		else
@@ -262,6 +281,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& deq)
 	for (size_t i = 0; i < numPairs; ++i)
 	{
 		int a = deq[2 * i], b = deq[2 * i + 1];
+		// ++_deqComparisons;
 		if (a > b) std::swap(a, b);
 		pairs.push_back(std::make_pair(a, b));
 	}

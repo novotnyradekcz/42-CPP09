@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:27 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/04/30 17:30:24 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/05 22:05:25 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ class PmergeMe
 private:
 	std::vector<int> _vector;
 	std::deque<int> _deque;
+	// mutable size_t _vecComparisons;
+	// mutable size_t _deqComparisons;
 	
 	PmergeMe();
 	
