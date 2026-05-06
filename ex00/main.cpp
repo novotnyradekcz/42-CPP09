@@ -6,12 +6,11 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:28:19 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/03/11 16:35:08 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 20:12:21 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
-#include <iostream>
 
 int main(int argc, char** argv)
 {

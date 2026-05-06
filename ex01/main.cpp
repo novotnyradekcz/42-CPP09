@@ -6,12 +6,11 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:28:19 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/06 19:36:53 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 20:12:15 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
-#include <iostream>
 
 int main(int argc, char** argv)
 {
