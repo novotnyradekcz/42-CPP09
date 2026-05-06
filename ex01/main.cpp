@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:28:19 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/05 20:23:31 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 19:36:53 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	try
 	{
 		RPN rpn(argv[1]);
-		int result = rpn.calculate();
+		long result = rpn.calculate();
 		std::cout << result << std::endl;
 	}
 	catch (const std::exception& e)
