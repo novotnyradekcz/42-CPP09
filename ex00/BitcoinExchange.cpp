@@ -6,15 +6,11 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:42 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/03/11 16:35:08 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 19:20:18 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "BitcoinExchange.hpp"
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <cstdlib>
 
 BitcoinExchange::BitcoinExchange() {}
 
@@ -121,14 +117,23 @@ bool BitcoinExchange::isValidDate(const std::string& date) const
 	int year = std::atoi(date.substr(0, 4).c_str());
 	int month = std::atoi(date.substr(5, 2).c_str());
 	int day = std::atoi(date.substr(8, 2).c_str());
-	
-	if (year < 2009 || year > 2022)
-		return false;
+
 	if (month < 1 || month > 12)
 		return false;
 	if (day < 1 || day > 31)
 		return false;
-	
+	if (date < "2009-01-02")
+		return false;
+
+	std::tm t = {};
+	t.tm_year = year - 1900;
+	t.tm_mon  = month - 1;
+	t.tm_mday = day;
+	t.tm_isdst = -1;
+	std::mktime(&t);
+	if (t.tm_year != year - 1900 || t.tm_mon != month - 1 || t.tm_mday != day)
+		return false;
+
 	return true;
 }
 
