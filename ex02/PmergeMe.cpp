@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:42 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/06 15:07:19 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 15:37:18 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,12 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 	// Prepend it with no comparisons needed.
 	main_chain.insert(main_chain.begin(), pend[0]);
 
-	// Step 5: insert remaining pend in Jacobsthal group order (TAOCP 5.3.1 eq.11-16).
+	// Step 5: Add straggler to pend if it exists.
+	// By adding it to the end, we make sure it gets inserted in the correct position in the next step.
+	if (hasStraggler)
+    	pend.push_back(straggler);
+
+	// Step 6: insert remaining pend in Jacobsthal group order (TAOCP 5.3.1 eq.11-16).
 	// Thresholds t[] = [1, 3, 5, 11, 21, ...]. Group r covers pend[t[r]..t[r+1]-1],
 	// inserted high-to-low. Bound = 2^(r+2)-1: the chain up to the first element's
 	// partner has exactly that many entries, so binary search costs <= r+2 comparisons.
@@ -249,10 +254,6 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 			}
 		}
 	}
-
-	// Step 6: straggler has no partner, search full chain
-	if (hasStraggler)
-		binaryInsertVector(main_chain, straggler, main_chain.size());
 
 	vec = main_chain;
 }
@@ -317,6 +318,8 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& deq)
 	}
 
 	main_chain.insert(main_chain.begin(), pend[0]);
+	if (hasStraggler)
+    	pend.push_back(straggler);
 
 	{
 		std::vector<size_t> t;
@@ -346,9 +349,6 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& deq)
 			}
 		}
 	}
-
-	if (hasStraggler)
-		binaryInsertDeque(main_chain, straggler, main_chain.size());
 
 	deq = main_chain;
 }
