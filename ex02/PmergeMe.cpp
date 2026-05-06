@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:42 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/06 15:37:18 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 17:32:03 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,14 +110,14 @@ void PmergeMe::sort()
 	
 	display("After:  ", vecCopy);
 	
-	std::cout << std::fixed << std::setprecision(5);
+	std::cout << std::fixed << std::setprecision(0);
 	std::cout << "Time to process a range of " << _vector.size() 
 	          << " elements with std::vector : " << vectorTime << " us" << std::endl;
 	std::cout << "Time to process a range of " << _deque.size() 
 	          << " elements with std::deque  : " << dequeTime << " us" << std::endl;
 #ifdef COUNT_COMPARISONS
-	std::cout << "Comparisons (vector): " << _vecComparisons << std::endl;
-	std::cout << "Comparisons (deque):  " << _deqComparisons << std::endl;
+	std::cout << "Comparisons with std::vector : " << _vecComparisons << std::endl;
+	std::cout << "Comparisons with std::deque  : " << _deqComparisons << std::endl;
 #endif
 }
 
@@ -133,12 +133,11 @@ void PmergeMe::display(const std::string& prefix, const std::vector<int>& vec) c
 	std::cout << std::endl;
 }
 
-// Generates Jacobsthal numbers up to n: 0,1,3,5,11,21,43,...
-// Used to determine the insertion order of pend elements.
 std::vector<size_t> PmergeMe::jacobsthalSequence(size_t n) const
 {
 	std::vector<size_t> seq;
-	if (n == 0) return seq;
+	if (n == 0)
+		return seq;
 	size_t a = 0, b = 1;
 	while (b <= n)
 	{
@@ -150,7 +149,7 @@ std::vector<size_t> PmergeMe::jacobsthalSequence(size_t n) const
 	return seq;
 }
 
-// Binary search insert: insert val into chain[0..end-1] (end is exclusive upper bound)
+// Binary search insert (end is exclusive)
 void PmergeMe::binaryInsertVector(std::vector<int>& chain, int val, size_t end)
 {
 	size_t lo = 0, hi = end;
@@ -173,9 +172,9 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 	if (vec.size() <= 1)
 		return;
 
-	// Step 1: pair up elements, sort each pair so larger -> main, smaller -> pend.
-	// Store pairs as (pend, main) so we can track which main goes with which pend.
-	bool hasStraggler = (vec.size() % 2 != 0);
+	// Step 1: pair up elements, sort each pair so larger -> main, smaller -> pend
+	// Store pairs as (pend, main) to keep track of partners
+	bool hasStraggler = vec.size() % 2 != 0;
 	int straggler = hasStraggler ? vec.back() : 0;
 	size_t numPairs = vec.size() / 2;
 
@@ -186,19 +185,18 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 #ifdef COUNT_COMPARISONS
 		++_vecComparisons;
 #endif
-		if (a > b) std::swap(a, b);
+		if (a > b)
+			std::swap(a, b);
 		pairs.push_back(std::make_pair(a, b));
 	}
 
-	// Step 2: recursively sort just the larger (main) elements.
+	// Step 2: recursively sort just the larger (main) elements
 	std::vector<int> main_chain;
 	for (size_t i = 0; i < pairs.size(); ++i)
 		main_chain.push_back(pairs[i].second);
 	fordJohnsonVector(main_chain);
 
-	// Step 3: build pend vector in the order that reflects the sorted main_chain.
-	// After sorting, main_chain[i] = some pairs[j].second.
-	// We need pend[i] = the smaller element paired with main_chain[i].
+	// Step 3: build pend vector in the order that reflects the sorted main_chain
 	std::vector<int> pend;
 	for (size_t i = 0; i < main_chain.size(); ++i)
 	{
@@ -207,22 +205,21 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 			if (pairs[j].second == main_chain[i])
 			{
 				pend.push_back(pairs[j].first);
-				pairs[j].second = -1; // mark used (handle duplicates)
+				pairs[j].second = -1; // mark used (handles duplicate elements)
 				break;
 			}
 		}
 	}
 
-	// Step 4: pend[0] is <= main_chain[0] (its pair partner is now at index 0).
-	// Prepend it with no comparisons needed.
+	// Step 4: pend[0] is <= main_chain[0] (its pair partner is now at index 0)
 	main_chain.insert(main_chain.begin(), pend[0]);
 
-	// Step 5: Add straggler to pend if it exists.
-	// By adding it to the end, we make sure it gets inserted in the correct position in the next step.
+	// Step 5: Add straggler to pend if it exists
+	// By adding it to the end, we make sure it gets inserted in the correct position in the next step
 	if (hasStraggler)
     	pend.push_back(straggler);
 
-	// Step 6: insert remaining pend in Jacobsthal group order (TAOCP 5.3.1 eq.11-16).
+	// Step 6: insert remaining pend in Jacobsthal group order (TAOCP 5.3.1 eq.11-16)
 	// Thresholds t[] = [1, 3, 5, 11, 21, ...]. Group r covers pend[t[r]..t[r+1]-1],
 	// inserted high-to-low. Bound = 2^(r+2)-1: the chain up to the first element's
 	// partner has exactly that many entries, so binary search costs <= r+2 comparisons.
@@ -244,13 +241,16 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 			size_t bound = (size_t(1) << (r + 2)) - 1;
 			size_t lo = t[r];
 			size_t hi = t[r + 1] - 1;
-			if (lo >= pend.size()) break;
-			if (hi >= pend.size()) hi = pend.size() - 1;
+			if (lo >= pend.size())
+				break;
+			if (hi >= pend.size())
+				hi = pend.size() - 1;
 			for (size_t k = hi; k >= lo; --k)
 			{
 				size_t cap = bound < main_chain.size() ? bound : main_chain.size();
 				binaryInsertVector(main_chain, pend[k], cap);
-				if (k == 0) break;
+				if (k == 0)
+					break;
 			}
 		}
 	}
@@ -339,13 +339,16 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& deq)
 			size_t bound = (size_t(1) << (r + 2)) - 1;
 			size_t lo = t[r];
 			size_t hi = t[r + 1] - 1;
-			if (lo >= pend.size()) break;
-			if (hi >= pend.size()) hi = pend.size() - 1;
+			if (lo >= pend.size())
+				break;
+			if (hi >= pend.size())
+				hi = pend.size() - 1;
 			for (size_t k = hi; k >= lo; --k)
 			{
 				size_t cap = bound < main_chain.size() ? bound : main_chain.size();
 				binaryInsertDeque(main_chain, pend[k], cap);
-				if (k == 0) break;
+				if (k == 0)
+					break;
 			}
 		}
 	}

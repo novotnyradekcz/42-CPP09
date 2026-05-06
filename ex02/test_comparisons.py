@@ -23,12 +23,12 @@ def parse_comparisons(stdout):
         return None, None
     vec_line = lines[4]
     deq_line = lines[5]
-    if not vec_line.startswith("Comparisons (vector):") or \
-       not deq_line.startswith("Comparisons (deque):"):
+    if not vec_line.startswith("Comparisons with std::vector") or \
+       not deq_line.startswith("Comparisons with std::deque"):
         return None, None
     try:
-        vec_count = int(vec_line.split(':')[1].strip())
-        deq_count = int(deq_line.split(':')[1].strip())
+        vec_count = int(vec_line.rsplit(':', 1)[1].strip())
+        deq_count = int(deq_line.rsplit(':', 1)[1].strip())
         return vec_count, deq_count
     except (IndexError, ValueError):
         return None, None
