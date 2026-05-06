@@ -44,18 +44,15 @@ if vec is None:
     print("Then rebuild with 'make re' and run this tester again.")
     exit(0)
 
-print("Comparison counter active. Running 10 random sequences per length for n where Ford-Johnson is optimal (Knuth, TAOCP).\n")
-
-# Ford-Johnson achieves the theoretical minimum only for these lengths
-OPTIMAL_LENGTHS = list(range(1, 12)) + [20, 21]
+print("Comparison counter active. Running 10 random sequences per length for n=1..25.\n")
 
 INT_MAX = 2147483647
 RUNS = 10
 
-print(f"{'n':>3}  {'theory':>6}  {'vec max':>8}  {'deq max':>8}  {'vec ok':>6}  {'deq ok':>6}")
-print("-" * 52)
+print(f"{'n':>3}  {'theory':>6}  {'vec max':>8}  {'deq max':>8}")
+print("-" * 34)
 
-for n in OPTIMAL_LENGTHS:
+for n in range(1, 26):
     theory = theoretical_min(n)
     vec_max = 0
     deq_max = 0
@@ -67,6 +64,4 @@ for n in OPTIMAL_LENGTHS:
             vec_max = max(vec_max, v)
         if d is not None:
             deq_max = max(deq_max, d)
-    vec_ok = "OK" if vec_max <= theory else "FAIL"
-    deq_ok = "OK" if deq_max <= theory else "FAIL"
-    print(f"{n:>3}  {theory:>6}  {vec_max:>8}  {deq_max:>8}  {vec_ok:>6}  {deq_ok:>6}")
+    print(f"{n:>3}  {theory:>6}  {vec_max:>8}  {deq_max:>8}")

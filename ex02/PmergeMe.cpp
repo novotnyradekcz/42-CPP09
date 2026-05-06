@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:42 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/05 23:37:46 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 15:07:19 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,45 +217,40 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& vec)
 	// Prepend it with no comparisons needed.
 	main_chain.insert(main_chain.begin(), pend[0]);
 
-	// Step 5: insert remaining pend in Jacobsthal order.
-	// pend[k]'s partner is at main_chain[k+1] (shifted by 1 due to prepend).
-	// Additional insertions shift positions further, tracked by numInserted.
-	std::vector<size_t> order;
+	// Step 5: insert remaining pend in Jacobsthal group order (TAOCP 5.3.1 eq.11-16).
+	// Thresholds t[] = [1, 3, 5, 11, 21, ...]. Group r covers pend[t[r]..t[r+1]-1],
+	// inserted high-to-low. Bound = 2^(r+2)-1: the chain up to the first element's
+	// partner has exactly that many entries, so binary search costs <= r+2 comparisons.
 	{
-		std::vector<size_t> jac = jacobsthalSequence(pend.size() - 1);
-		std::vector<bool> added(pend.size(), false);
-		added[0] = true;
-		for (size_t ji = 0; ji < jac.size(); ++ji)
+		std::vector<size_t> t;
+		t.push_back(1);
 		{
-			size_t idx = jac[ji];
-			if (idx < pend.size() && !added[idx])
+			size_t a = 1, b = 3;
+			while (t.back() < pend.size())
 			{
-				order.push_back(idx);
-				added[idx] = true;
+				t.push_back(b);
+				size_t c = b + 2 * a;
+				a = b;
+				b = c;
 			}
-			size_t prev = (ji == 0) ? 1 : jac[ji - 1] + 1;
-			for (size_t k = idx - 1; k >= prev && k < pend.size(); --k)
+		}
+		for (size_t r = 0; r + 1 < t.size(); ++r)
+		{
+			size_t bound = (size_t(1) << (r + 2)) - 1;
+			size_t lo = t[r];
+			size_t hi = t[r + 1] - 1;
+			if (lo >= pend.size()) break;
+			if (hi >= pend.size()) hi = pend.size() - 1;
+			for (size_t k = hi; k >= lo; --k)
 			{
-				if (!added[k]) { order.push_back(k); added[k] = true; }
+				size_t cap = bound < main_chain.size() ? bound : main_chain.size();
+				binaryInsertVector(main_chain, pend[k], cap);
 				if (k == 0) break;
 			}
 		}
-		for (size_t k = 1; k < pend.size(); ++k)
-			if (!added[k]) order.push_back(k);
 	}
 
-	size_t numInserted = 1; // pend[0] already in chain
-	for (size_t oi = 0; oi < order.size(); ++oi)
-	{
-		size_t k = order[oi];
-		// Partner main_chain[k] was at original index k, now at k + numInserted
-		// (shifted right by all previously inserted pend elements).
-		// pend[k] <= partner, so binary search is bounded to that position (exclusive).
-		binaryInsertVector(main_chain, pend[k], k + numInserted + 1);
-		++numInserted;
-	}
-
-	// Step 6: insert straggler
+	// Step 6: straggler has no partner, search full chain
 	if (hasStraggler)
 		binaryInsertVector(main_chain, straggler, main_chain.size());
 
@@ -323,36 +318,33 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& deq)
 
 	main_chain.insert(main_chain.begin(), pend[0]);
 
-	std::vector<size_t> order;
 	{
-		std::vector<size_t> jac = jacobsthalSequence(pend.size() - 1);
-		std::vector<bool> added(pend.size(), false);
-		added[0] = true;
-		for (size_t ji = 0; ji < jac.size(); ++ji)
+		std::vector<size_t> t;
+		t.push_back(1);
 		{
-			size_t idx = jac[ji];
-			if (idx < pend.size() && !added[idx])
+			size_t a = 1, b = 3;
+			while (t.back() < pend.size())
 			{
-				order.push_back(idx);
-				added[idx] = true;
+				t.push_back(b);
+				size_t c = b + 2 * a;
+				a = b;
+				b = c;
 			}
-			size_t prev = (ji == 0) ? 1 : jac[ji - 1] + 1;
-			for (size_t k = idx - 1; k >= prev && k < pend.size(); --k)
+		}
+		for (size_t r = 0; r + 1 < t.size(); ++r)
+		{
+			size_t bound = (size_t(1) << (r + 2)) - 1;
+			size_t lo = t[r];
+			size_t hi = t[r + 1] - 1;
+			if (lo >= pend.size()) break;
+			if (hi >= pend.size()) hi = pend.size() - 1;
+			for (size_t k = hi; k >= lo; --k)
 			{
-				if (!added[k]) { order.push_back(k); added[k] = true; }
+				size_t cap = bound < main_chain.size() ? bound : main_chain.size();
+				binaryInsertDeque(main_chain, pend[k], cap);
 				if (k == 0) break;
 			}
 		}
-		for (size_t k = 1; k < pend.size(); ++k)
-			if (!added[k]) order.push_back(k);
-	}
-
-	size_t numInserted = 1;
-	for (size_t oi = 0; oi < order.size(); ++oi)
-	{
-		size_t k = order[oi];
-		binaryInsertDeque(main_chain, pend[k], k + numInserted + 1);
-		++numInserted;
 	}
 
 	if (hasStraggler)

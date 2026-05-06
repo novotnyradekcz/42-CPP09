@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:27 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/05 23:36:27 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/06 10:04:07 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <string>
 
 // Uncomment the line below to enable comparison counting
-// #define COUNT_COMPARISONS
+#define COUNT_COMPARISONS
 
 class PmergeMe
 {
