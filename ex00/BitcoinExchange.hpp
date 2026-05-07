@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:27 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/06 19:15:43 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:24:53 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fstream>
 # include <iostream>
 # include <ctime>
+# include <cstdlib>
 
 class BitcoinExchange
 {

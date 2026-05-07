@@ -6,7 +6,7 @@
 /*   By: rnovotny <rnovotny@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 15:29:27 by rnovotny          #+#    #+#             */
-/*   Updated: 2026/05/06 20:14:53 by rnovotny         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:28:00 by rnovotny         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <string>
 # include <sstream>
 # include <iostream>
+# include <cstdlib>
 
 class RPN
 {
